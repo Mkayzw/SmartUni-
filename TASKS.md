@@ -304,6 +304,31 @@ Effort: **S** about 15 min, **M** 30 to 45 min, **L** 60+ min (for someone rusty
 
 ---
 
+## Java language drills (independent of Spring and React)
+
+These are **hands-on TODOs**, not theory questions. No solution code is provided.
+Implement the nine methods in `backend/src/main/java/com/smartuni/practice/JavaFundamentalsExercises.java` and run
+`cd backend && ./run-task.sh JAVA-001` (replace the ID for the exercise you choose).
+The tests are tagged `todo` so baseline `mvn test` remains unaffected.
+
+| Task | Skill | Acceptance criteria | Priority |
+|---|---|---|---|
+| JAVA-001 | `stream`, `filter`, `map`, `distinct`, `sorted` | Normalized, unique, sorted course codes | P0 |
+| JAVA-002 | `Collectors.groupingBy` and `counting` | Counts active enrollments by course | P0 |
+| JAVA-003 | `Collectors.joining` | Format validation errors exactly as requested | P0 |
+| JAVA-004 | `Collectors.toMap`, merge lambdas | Last duplicate student wins | P1 |
+| JAVA-005 | `Comparator.comparing`, `thenComparing` | Sorted copy, original list unchanged | P0 |
+| JAVA-006 | `Optional`, `findFirst`, `orElseThrow` | Student found or meaningful exception | P0 |
+| JAVA-007 | `flatMap` | Flatten nested course lists | P1 |
+| JAVA-008 | `Predicate<T>` and lambda parameters | Apply caller-provided student filter | P0 |
+| JAVA-009 | Bounded thinking with generic `<T>`, Set/List | Keep unique values in encounter order | P1 |
+
+These methods are independent of the SmartUni entities, so you can practise the Java language
+without completing JPA relationships first. Start with JAVA-003 if the ZB exception handler
+was confusing, or JAVA-002 if grouped counts are new to you.
+
+---
+
 ## Task index
 
 | ID | Priority | Area | Topic |
@@ -342,3 +367,4 @@ Effort: **S** about 15 min, **M** 30 to 45 min, **L** 60+ min (for someone rusty
 | FE-010 | P2 | React | Debounce + cleanup |
 | FE-011 | P2 | React | Interval cleanup |
 | FE-012 | P2 | React | Derived state |
+| JAVA-001–JAVA-009 | P0/P1 | Core Java | Streams, collectors, lambdas, comparators, Optional, generics |
