@@ -39,6 +39,8 @@ public class VenueBookingService {
      *   - expectedAttendance <= venue capacity                          -> 409
      *   - no overlapping booking for the same venue (TODO-BE-015)       -> 409
      *
+     * Build the new entity with VenueBooking.builder() (project convention).
+     *
      * Test: VenueBookingRulesTest
      */
     public BookingResponse createBooking(CreateBookingRequest request) {

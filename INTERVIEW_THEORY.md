@@ -127,3 +127,8 @@ Questions marked ★ are tied directly to code you'll write. Prioritise those.
 95. How do you read a long Spring stack trace efficiently?
 96. How would you prove whether a bug is in the frontend or the backend?
 97. How do you debug "it works on my machine"?
+
+## 14. Lombok
+98. ★ Why do the entities combine `@Builder`, `@AllArgsConstructor(access = PRIVATE)` and `@NoArgsConstructor(access = PROTECTED)`? What breaks if you remove each one?
+99. ★ What does `@Builder.Default` fix? What value would `Student.builder().build().isActive()` return without it?
+100. Why is `@Data` a poor choice on a JPA entity?

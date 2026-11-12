@@ -25,7 +25,7 @@ public class EnrollmentService {
      *   - student must be active       -> BusinessRuleViolationException (409)
      *   - no ACTIVE duplicate          -> BusinessRuleViolationException (409)
      *   - course must not be full      -> BusinessRuleViolationException (409)
-     * New enrollments are ACTIVE with enrolledAt = now.
+     * New enrollments are ACTIVE with enrolledAt = now. Build them with Enrollment.builder() (project convention).
      *
      * Test: EnrollmentWorkflowTest
      */

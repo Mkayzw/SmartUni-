@@ -5,7 +5,7 @@ It builds, starts and has a green baseline test suite before you write a line.
 
 - [`TASKS.md`](TASKS.md): 34 exercises (P0/P1/P2) with acceptance criteria and suggested order
 - [`DEBUGGING_CHALLENGES.md`](DEBUGGING_CHALLENGES.md): 17 bugs (live, test-based, frontend) with progressive hints
-- [`INTERVIEW_THEORY.md`](INTERVIEW_THEORY.md): 97 questions; answers in [`INTERVIEW_THEORY_ANSWERS.md`](INTERVIEW_THEORY_ANSWERS.md)
+- [`INTERVIEW_THEORY.md`](INTERVIEW_THEORY.md): 100 questions; answers in [`INTERVIEW_THEORY_ANSWERS.md`](INTERVIEW_THEORY_ANSWERS.md)
 
 There are no solution files. If you get stuck, ask for a hint.
 

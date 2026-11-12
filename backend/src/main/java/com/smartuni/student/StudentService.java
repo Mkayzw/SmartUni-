@@ -32,6 +32,7 @@ public class StudentService {
      *   - email must be unique (throw BusinessRuleViolationException with a clear message)
      *   - new students start active
      *   - return the saved student as a StudentResponse
+     *   - build the new entity with Student.builder() (project convention, see Student's Javadoc)
      * Think about: where should the transaction boundary be? Is the "check then save" sequence safe
      * under concurrency? (The unique column constraint is your safety net.)
      */

@@ -21,10 +21,11 @@ class StudentRepositoryTest {
 
     @Test
     void findsStudentByEmail() {
-        Student student = new Student();
-        student.setFirstName("Grace");
-        student.setLastName("Hopper");
-        student.setEmail("grace.hopper@test.smartuni.ac.zw");
+        Student student = Student.builder()
+                .firstName("Grace")
+                .lastName("Hopper")
+                .email("grace.hopper@test.smartuni.ac.zw")
+                .build();
         studentRepository.save(student);
 
         assertThat(studentRepository.findByEmail("grace.hopper@test.smartuni.ac.zw"))

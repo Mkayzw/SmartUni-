@@ -33,10 +33,11 @@ public class CourseService {
             throw new BusinessRuleViolationException("A course with code " + request.code() + " already exists");
         }
 
-        Course course = new Course();
-        course.setCode(request.code());
-        course.setTitle(request.title());
-        course.setCapacity(request.capacity());
+        Course course = Course.builder()
+                .code(request.code())
+                .title(request.title())
+                .capacity(request.capacity())
+                .build();
 
         Course savedCourse = courseRepository.save(course);
         return toResponse(savedCourse);

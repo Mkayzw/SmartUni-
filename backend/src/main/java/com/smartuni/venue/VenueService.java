@@ -28,11 +28,12 @@ public class VenueService {
                     "Room " + request.roomNumber() + " in " + request.building() + " is already registered");
         }
 
-        Venue venue = new Venue();
-        venue.setName(request.name());
-        venue.setBuilding(request.building());
-        venue.setRoomNumber(request.roomNumber());
-        venue.setCapacity(request.capacity());
+        Venue venue = Venue.builder()
+                .name(request.name())
+                .building(request.building())
+                .roomNumber(request.roomNumber())
+                .capacity(request.capacity())
+                .build();
 
         return VenueResponse.from(venueRepository.save(venue));
     }

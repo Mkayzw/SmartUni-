@@ -124,3 +124,8 @@ These are short model answers, not scripts. Say them in your own words and attac
 95. Skip framework frames, go to the bottom "Caused by", find the first frame in `com.smartuni`, read the exception message literally.
 96. Inspect the actual HTTP exchange. If the response is wrong, it's the backend (confirm with curl). If the response is right but the UI is wrong, it's the frontend.
 97. Compare environments: config/profiles, data, versions, env vars, time zones, caches. Make the difference explicit, then eliminate variables one at a time.
+
+## 14. Lombok
+98. `@Builder` generates a builder that calls an all-args constructor, so one must exist; making it private forces callers through the builder. Declaring any constructor removes Java's implicit no-args one, but JPA needs a no-args constructor to instantiate entities and create lazy proxies, so it's added back as protected (the minimum JPA allows). Remove the all-args constructor and `@Builder` won't compile next to `@NoArgsConstructor`; remove the no-args one and Hibernate fails at runtime.
+99. `@Builder` ignores field initialisers, so `active` would default to `false`, the Java default for `boolean`. `@Builder.Default` makes the builder use the initialiser.
+100. It generates `equals`/`hashCode` over all fields (mutable, includes the generated id and lazy associations) and `toString` over associations, which can trigger lazy loading or infinite recursion. Prefer explicit `@Getter`/`@Setter`.

@@ -12,6 +12,15 @@ grep -rn "TODO-BE-009" src  # find every place the task touches
 Tests for unfinished tasks are tagged `todo` and skipped by a normal `mvn test`, so the baseline build stays green.
 A task is done when its tagged tests pass **and** you can explain every annotation you used.
 
+**Entity construction convention:** create new entities with Lombok builders (`Course.builder().code(...).build()`),
+as the finished services do. Setters are only for changing an entity you loaded inside a transaction. Every entity has
+`@Builder`, a private all-args constructor for the builder, and a protected no-args constructor for JPA. Watch out for
+`@Builder.Default` when a field has an initialiser (see `Student.active`).
+
+**Controller convention:** finished controllers return `ResponseEntity` from write endpoints:
+`ResponseEntity.created(uri).body(...)` for creates (201 + `Location`), `ResponseEntity.noContent().build()` for deletes.
+Follow the same style in the endpoints you add.
+
 **Status codes used across the API:** 400 = malformed or invalid input (bean validation), 404 = referenced record
 does not exist, 409 = valid input that breaks a business rule (duplicate, full, overlapping, inactive, in the past).
 Using 409 for every business rule is a deliberate simplification. Some teams prefer 422 for rule violations; be ready to discuss it.
@@ -69,7 +78,7 @@ Effort: **S** about 15 min, **M** 30 to 45 min, **L** 60+ min (for someone rusty
 ### TODO-BE-005: Delete an announcement properly
 - **Requirement:** `DELETE /api/announcements/{id}` returns 204, or 404 for an unknown id.
 - **Files:** `announcement/AnnouncementService.java`
-- **Concepts:** `existsById`/`findById` vs `deleteById`, `@ResponseStatus(NO_CONTENT)`, idempotency of DELETE
+- **Concepts:** `existsById`/`findById` vs `deleteById`, `ResponseEntity.noContent()` (already in the controller), idempotency of DELETE
 - **Acceptance:** tests pass.
 - **Tests:** `AnnouncementControllerTest` (BE-005)
 - **Difficulty:** Easy · **Effort:** S · **Prereqs:** none · **Monday:** Essential

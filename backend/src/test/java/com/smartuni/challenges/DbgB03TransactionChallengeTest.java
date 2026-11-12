@@ -38,10 +38,11 @@ class DbgB03TransactionChallengeTest {
 
         @Transactional
         public void onboard(String email) throws WelcomeEmailException {
-            Student student = new Student();
-            student.setFirstName("Temp");
-            student.setLastName("Student");
-            student.setEmail(email);
+            Student student = Student.builder()
+                    .firstName("Temp")
+                    .lastName("Student")
+                    .email(email)
+                    .build();
             studentRepository.save(student);
 
             sendWelcomeEmail(email);

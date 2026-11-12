@@ -1,14 +1,15 @@
 package com.smartuni.enrollment;
 
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -29,15 +30,16 @@ public class EnrollmentController {
     }
 
     @PostMapping("/enrollments")
-    @ResponseStatus(HttpStatus.CREATED)
-    public EnrollmentResponse enroll(@Valid @RequestBody CreateEnrollmentRequest request) {
-        return enrollmentService.enroll(request);
+    public ResponseEntity<EnrollmentResponse> enroll(@Valid @RequestBody CreateEnrollmentRequest request) {
+        EnrollmentResponse createdEnrollment = enrollmentService.enroll(request);
+        return ResponseEntity.created(URI.create("/api/enrollments/" + createdEnrollment.id())).body(createdEnrollment);
     }
 
+    /** Several resources are created, so there is no single Location to point at: plain 201 with the list. */
     @PostMapping("/enrollments/batch")
-    @ResponseStatus(HttpStatus.CREATED)
-    public List<EnrollmentResponse> enrollInCourses(@Valid @RequestBody BatchEnrollmentRequest request) {
-        return enrollmentService.enrollInCourses(request);
+    public ResponseEntity<List<EnrollmentResponse>> enrollInCourses(@Valid @RequestBody BatchEnrollmentRequest request) {
+        List<EnrollmentResponse> createdEnrollments = enrollmentService.enrollInCourses(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdEnrollments);
     }
 
     // TODO-BE-010: PATCH /api/enrollments/{enrollmentId}/cancel  -> 200 with the updated EnrollmentResponse

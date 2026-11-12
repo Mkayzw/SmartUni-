@@ -23,10 +23,11 @@ public class AnnouncementService {
 
     @Transactional
     public AnnouncementResponse createAnnouncement(CreateAnnouncementRequest request) {
-        Announcement announcement = new Announcement();
-        announcement.setTitle(request.title());
-        announcement.setContent(request.content());
-        announcement.setPinned(false);
+        Announcement announcement = Announcement.builder()
+                .title(request.title())
+                .content(request.content())
+                .pinned(false)
+                .build();
         return AnnouncementResponse.from(announcementRepository.save(announcement));
     }
 

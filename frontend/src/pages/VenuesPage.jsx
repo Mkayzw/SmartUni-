@@ -37,17 +37,18 @@ export default function VenuesPage() {
   async function handleCreateVenue(event) {
     event.preventDefault();
     setError(null);
+    const venueToCreate = newVenue;
+    setNewVenue(emptyVenue);
     try {
       const response = await fetch(`${API_BASE_URL}/api/venues`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...newVenue, capacity: Number(newVenue.capacity) }),
+        body: JSON.stringify({ ...venueToCreate, capacity: Number(venueToCreate.capacity) }),
       });
       if (!response.ok) throw await toApiError(response);
       const created = await response.json();
       venues.push(created);
       setVenues(venues);
-      setNewVenue(emptyVenue);
     } catch (err) {
       setError(err.message);
     }
