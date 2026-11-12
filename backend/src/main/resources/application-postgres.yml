@@ -1,0 +1,16 @@
+# Activate with:  SPRING_PROFILES_ACTIVE=postgres mvn spring-boot:run
+# Expects a local PostgreSQL database "smartuni". Override with env vars if yours differs.
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/smartuni}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+      mode: never   # data.sql uses H2-friendly syntax; seed Postgres yourself if you need data
+  h2:
+    console:
+      enabled: false
