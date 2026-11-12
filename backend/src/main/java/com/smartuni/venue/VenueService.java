@@ -17,7 +17,7 @@ public class VenueService {
     @Transactional(readOnly = true)
     public List<VenueResponse> listVenues() {
         return venueRepository.findAllByOrderByBuildingAscRoomNumberAsc().stream()
-                .map(VenueResponse::from)
+                .map(this::toResponse)
                 .toList();
     }
 
@@ -35,14 +35,15 @@ public class VenueService {
                 .capacity(request.capacity())
                 .build();
 
-        return VenueResponse.from(venueRepository.save(venue));
+        Venue savedVenue = venueRepository.save(venue);
+        return toResponse(savedVenue);
     }
 
     public VenueResponse updateCapacity(Long id, int newCapacity) {
         Venue venue = venueRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Venue", id));
         venue.setCapacity(newCapacity);
-        return VenueResponse.from(venue);
+        return toResponse(venue);
     }
 
     /**
@@ -51,5 +52,14 @@ public class VenueService {
      */
     public List<VenueResponse> findAvailableVenues(LocalDateTime start, LocalDateTime end, int minCapacity) {
         throw new UnsupportedOperationException("TODO-BE-020: implement available venue search");
+    }
+
+    private VenueResponse toResponse(Venue venue) {
+        return new VenueResponse(
+                venue.getId(),
+                venue.getName(),
+                venue.getBuilding(),
+                venue.getRoomNumber(),
+                venue.getCapacity());
     }
 }

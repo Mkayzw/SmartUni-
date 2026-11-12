@@ -78,6 +78,14 @@ frontend/src
 Architecture: feature packages, Controller → Service → Repository, DTO records at the HTTP boundary, constructor injection
 via `@RequiredArgsConstructor`, business rules and transactions in services, one `@RestControllerAdvice` for errors.
 
+### Java style used in the scaffold
+
+- **Request records** declare inputs and Bean Validation constraints; **response records** only describe the outgoing API data.
+- Finished service methods map entities to response records with small, private `toResponse(...)` helpers, consistent with `CourseService`. No static `Response.from(entity)` factories or mapping framework.
+- Controllers bind HTTP requests and return suitable status codes (`ResponseEntity` for creates and no-content responses). Services own business logic; repositories own database queries.
+- Prefer constructor injection, descriptive names, straightforward `if` statements, and Lombok builders for new entities. No unnecessary generic base classes or clever abstractions.
+- **All TODO exercises remain yours to implement.** Existing deliberate bugs and incomplete features are intentionally preserved.
+
 ## What works today
 
 | Area | Works | Your job |

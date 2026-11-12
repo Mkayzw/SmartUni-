@@ -17,7 +17,7 @@ public class VenueBookingService {
     @Transactional(readOnly = true)
     public List<BookingResponse> listBookings() {
         return venueBookingRepository.findAllByOrderByStartTimeAsc().stream()
-                .map(BookingResponse::from)
+                .map(this::toResponse)
                 .toList();
     }
 
@@ -45,5 +45,17 @@ public class VenueBookingService {
      */
     public BookingResponse createBooking(CreateBookingRequest request) {
         throw new UnsupportedOperationException("TODO-BE-014: implement venue booking");
+    }
+
+    private BookingResponse toResponse(VenueBooking booking) {
+        return new BookingResponse(
+                booking.getId(),
+                booking.getVenue().getId(),
+                booking.getVenue().getName(),
+                booking.getCourse().getId(),
+                booking.getCourse().getCode(),
+                booking.getStartTime(),
+                booking.getEndTime(),
+                booking.getExpectedAttendance());
     }
 }

@@ -15,7 +15,7 @@ public class StudentService {
     @Transactional(readOnly = true)
     public List<StudentResponse> listStudents() {
         return studentRepository.findAllByOrderByLastNameAscFirstNameAsc().stream()
-                .map(StudentResponse::from)
+                .map(this::toResponse)
                 .toList();
     }
 
@@ -23,7 +23,7 @@ public class StudentService {
     public StudentResponse getStudent(Long id) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student", id));
-        return StudentResponse.from(student);
+        return toResponse(student);
     }
 
     /**
@@ -54,5 +54,14 @@ public class StudentService {
      */
     public StudentResponse changeActiveStatus(Long id, boolean active) {
         throw new UnsupportedOperationException("TODO-BE-007: implement activate/deactivate");
+    }
+
+    private StudentResponse toResponse(Student student) {
+        return new StudentResponse(
+                student.getId(),
+                student.getFirstName(),
+                student.getLastName(),
+                student.getEmail(),
+                student.isActive());
     }
 }

@@ -12,16 +12,4 @@ public record BookingResponse(
         LocalDateTime endTime,
         int expectedAttendance
 ) {
-
-    public static BookingResponse from(VenueBooking booking) {
-        return new BookingResponse(
-                booking.getId(),
-                booking.getVenue().getId(),
-                booking.getVenue().getName(),
-                booking.getCourse().getId(),
-                booking.getCourse().getCode(),
-                booking.getStartTime(),
-                booking.getEndTime(),
-                booking.getExpectedAttendance());
-    }
 }

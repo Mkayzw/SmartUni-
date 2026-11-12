@@ -17,7 +17,7 @@ public class AnnouncementService {
     @Transactional(readOnly = true)
     public List<AnnouncementResponse> listAnnouncements() {
         return announcementRepository.findAllByOrderByIdDesc().stream()
-                .map(AnnouncementResponse::from)
+                .map(this::toResponse)
                 .toList();
     }
 
@@ -28,7 +28,8 @@ public class AnnouncementService {
                 .content(request.content())
                 .pinned(false)
                 .build();
-        return AnnouncementResponse.from(announcementRepository.save(announcement));
+        Announcement savedAnnouncement = announcementRepository.save(announcement);
+        return toResponse(savedAnnouncement);
     }
 
     /**
@@ -44,5 +45,14 @@ public class AnnouncementService {
      */
     public AnnouncementResponse setPinned(Long id, boolean pinned) {
         throw new UnsupportedOperationException("TODO-BE-016: implement pin/unpin");
+    }
+
+    private AnnouncementResponse toResponse(Announcement announcement) {
+        return new AnnouncementResponse(
+                announcement.getId(),
+                announcement.getTitle(),
+                announcement.getContent(),
+                announcement.isPinned(),
+                announcement.getCreatedAt());
     }
 }
