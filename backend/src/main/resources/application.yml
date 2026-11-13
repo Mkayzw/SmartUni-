@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: smartuni
+  datasource:
+    url: jdbc:h2:mem:smartuni;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true        # http://localhost:8080/h2-console  (JDBC URL above, user sa, empty password)
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false    # deliberate: lazy loading outside a transaction fails loudly. See INTERVIEW_THEORY.md.
+    defer-datasource-initialization: true   # run data.sql AFTER Hibernate has created the tables
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+
+logging:
+  level:
+    org.hibernate.SQL: ${SQL_LOG_LEVEL:info}   # set SQL_LOG_LEVEL=debug to see every SQL statement (useful for BE-019)
+
+smartuni:
+  booking:
+    min-duration-minutes: 30
+    max-duration-minutes: 240
+    opening-time: "07:00"
+    closing-time: "21:00"
