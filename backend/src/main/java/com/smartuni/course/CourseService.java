@@ -1,5 +1,6 @@
 package com.smartuni.course;
 
+import com.smartuni.booking.VenueBooking;
 import com.smartuni.common.BusinessRuleViolationException;
 import com.smartuni.common.ResourceNotFoundException;
 import java.util.List;
@@ -12,6 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    public Course findById(Long id ){
+        return  courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Course", id));
+    }
+
 
     @Transactional(readOnly = true)
     public List<CourseResponse> listCourses() {
@@ -26,6 +31,8 @@ public class CourseService {
                 .orElseThrow(() -> new ResourceNotFoundException("Course", id));
         return toResponse(course);
     }
+
+
 
     @Transactional
     public CourseResponse createCourse(CreateCourseRequest request) {

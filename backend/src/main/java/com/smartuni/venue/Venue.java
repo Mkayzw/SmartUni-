@@ -18,8 +18,8 @@ import lombok.Setter;
 @Table(name = "venues", uniqueConstraints = @UniqueConstraint(columnNames = {"building", "room_number"}))
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Venue {
 

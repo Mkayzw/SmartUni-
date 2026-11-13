@@ -1,7 +1,18 @@
 package com.smartuni.booking;
 
-import java.util.List;
+import com.smartuni.common.BusinessRuleViolationException;
+import com.smartuni.common.ResourceNotFoundException;
+import com.smartuni.config.BookingPolicyProperties;
+import com.smartuni.course.Course;
+import com.smartuni.course.CourseService;
+import com.smartuni.venue.Venue;
+import com.smartuni.venue.VenueService;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,22 +21,34 @@ import org.springframework.transaction.annotation.Transactional;
 public class VenueBookingService {
 
     private final VenueBookingRepository venueBookingRepository;
-
+    private final VenueService venueService;
+    private final CourseService courseService;
+    private final BookingPolicyProperties bookingPolicyProperties;
+    private final Clock clock;
     /**
+     *
      * Works, but look at the SQL log when you call GET /api/bookings. (TODO-BE-019)
      */
+
+
+
+    public VenueBooking findById(Long id) {
+        return venueBookingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking", id));
+    }
+
+
+
     @Transactional(readOnly = true)
-    public List<BookingResponse> listBookings() {
-        return venueBookingRepository.findAllByOrderByStartTimeAsc().stream()
-                .map(this::toResponse)
-                .toList();
+    public Page<BookingResponse> listBookings(Pageable pageable) {
+        return venueBookingRepository.findAll(pageable)
+                .map(this::toResponse);
     }
 
     @Transactional(readOnly = true)
-    public List<BookingResponse> listBookingsForVenue(Long venueId) {
-        return venueBookingRepository.findAllByVenueIdOrderByStartTimeAsc(venueId).stream()
-                .map(BookingResponse::from)
-                .toList();
+    public Page<BookingResponse> listBookingsForVenue(Long venueId, Pageable pageable) {
+        return venueBookingRepository.findAllByVenueId(venueId, pageable)
+                .map(this::toResponse);
     }
 
     /**
@@ -41,10 +64,59 @@ public class VenueBookingService {
      *
      * Build the new entity with VenueBooking.builder() (project convention).
      *
+     *
+     *
      * Test: VenueBookingRulesTest
      */
+    @Transactional
     public BookingResponse createBooking(CreateBookingRequest request) {
-        throw new UnsupportedOperationException("TODO-BE-014: implement venue booking");
+        Venue venue = venueService.findById(request.venueId());
+        Course course = courseService.findById(request.courseId());
+
+        if (!request.endTime().isAfter(request.startTime())) {
+            throw new BusinessRuleViolationException("End time must be after start time");
+        }
+
+        if (!request.startTime().isAfter(LocalDateTime.now(clock))) {
+            throw new BusinessRuleViolationException("Start time must be in the future");
+        }
+
+        Duration duration = Duration.between(request.startTime(), request.endTime());
+        Duration minimum = Duration.ofMinutes(bookingPolicyProperties.minDurationMinutes());
+        Duration maximum = Duration.ofMinutes(bookingPolicyProperties.maxDurationMinutes());
+
+        if (duration.compareTo(minimum) < 0 || duration.compareTo(maximum) > 0) {
+            throw new BusinessRuleViolationException("Booking duration is outside the allowed limits");
+        }
+
+        if (!request.startTime().toLocalDate().equals(request.endTime().toLocalDate())) {
+            throw new BusinessRuleViolationException("Booking must start and end on the same day");
+        }
+
+        if (request.startTime().toLocalTime().isBefore(bookingPolicyProperties.openingTime())
+                || request.endTime().toLocalTime().isAfter(bookingPolicyProperties.closingTime())) {
+            throw new BusinessRuleViolationException("Booking must be within opening hours");
+        }
+
+        if (request.expectedAttendance() > venue.getCapacity()) {
+            throw new BusinessRuleViolationException("Expected attendance exceeds venue capacity");
+        }
+
+        if (venueBookingRepository.existsOverlappingBooking(
+                request.venueId(), request.startTime(), request.endTime())) {
+            throw new BusinessRuleViolationException("Venue already has a booking during this time");
+        }
+
+        VenueBooking booking = VenueBooking.builder()
+                .venue(venue)
+                .course(course)
+                .startTime(request.startTime())
+                .endTime(request.endTime())
+                .expectedAttendance(request.expectedAttendance())
+                .build();
+
+        VenueBooking savedBooking = venueBookingRepository.save(booking);
+        return toResponse(savedBooking);
     }
 
     private BookingResponse toResponse(VenueBooking booking) {

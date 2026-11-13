@@ -1,5 +1,7 @@
 package com.smartuni.config;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import java.time.LocalTime;
 
 /**
@@ -17,6 +19,7 @@ import java.time.LocalTime;
  *
  * Test: BookingPolicyPropertiesTest
  */
+@ConfigurationProperties(prefix="smartuni.booking")
 public record BookingPolicyProperties(
         int minDurationMinutes,
         int maxDurationMinutes,

@@ -10,7 +10,7 @@ spring:
       enabled: true        # http://localhost:8080/h2-console  (JDBC URL above, user sa, empty password)
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     open-in-view: false    # deliberate: lazy loading outside a transaction fails loudly. See INTERVIEW_THEORY.md.
     defer-datasource-initialization: true   # run data.sql AFTER Hibernate has created the tables
     properties:

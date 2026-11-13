@@ -44,6 +44,17 @@ public class GlobalExceptionHandler {
     //   Right now it falls through to Spring's default handling and the client receives a 500.
     //   A broken business rule is not a server crash. Pick the correct 4xx status and return an ApiError.
 
+    @ExceptionHandler(BusinessRuleViolationException.class)
+    public ResponseEntity<ApiError> handleBusinessRuleViolation(
+            BusinessRuleViolationException exception, HttpServletRequest request) {
+        ApiError body = ApiError.of(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                exception.getMessage(),
+                request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
     // TODO-BE-003 (part 2): Handle bean validation failures from @Valid @RequestBody.
     //   Which exception does Spring MVC throw when @Valid fails on a request body?
     //   Return 400 with ApiError.fieldErrors populated: field name -> message.

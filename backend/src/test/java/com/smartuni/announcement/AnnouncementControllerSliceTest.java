@@ -29,7 +29,7 @@ class AnnouncementControllerSliceTest {
 
     @Test
     void returnsWhateverTheServiceReturns() throws Exception {
-        AnnouncementResponse response = new AnnouncementResponse(42L, "Title", "Body", true, LocalDateTime.of(2026, 1, 1, 9, 0));
+        AnnouncementResponse response = new AnnouncementResponse(42L, null, null, "Title", "Body", true, LocalDateTime.of(2026, 1, 1, 9, 0));
         when(announcementService.listAnnouncements()).thenReturn(List.of(response));
 
         mockMvc.perform(get("/api/announcements"))

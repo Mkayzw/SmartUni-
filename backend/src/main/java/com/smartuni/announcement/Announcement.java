@@ -1,33 +1,27 @@
 package com.smartuni.announcement;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.smartuni.course.Course;
+import jakarta.persistence.*;
+import lombok.*;
 
-/**
- * TODO-BE-017: an announcement may OPTIONALLY belong to a course (e.g. "CS101 lecture moved").
- *   Add a nullable many-to-one to Course on column course_id. What does optional=true change in the SQL join?
- */
+import java.time.LocalDateTime;
+
+
 @Entity
-@Table(name = "announcements")
+@Table(name = "announcements",
+indexes={
+        @Index( name = "idx_announcements_pinned_id",
+                columnList = "pinned DESC,id DESC")})
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Announcement {
 
+    @ManyToOne(fetch= FetchType.LAZY,optional = true)
+    @JoinColumn(name="course_id",nullable = true)
+    private Course course;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,6 +37,9 @@ public class Announcement {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+
+
 
     @PrePersist
     void onCreate() {
