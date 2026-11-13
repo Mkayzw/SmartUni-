@@ -1,5 +1,7 @@
 # SmartUni practice tasks
 
+**New hands-on code review and security practice:** see [`REVIEW_TODOS.md`](REVIEW_TODOS.md) for TODOs based on the work pushed to this branch (especially announcement PATCH semantics, booking pagination, and the new authentication/authorization exercises). The review adds requirements **without** writing implementation code.
+
 You write the code. Every task has an ID that appears in the source as a `TODO-...` comment, and most have tests
 tagged with the same ID.
 
